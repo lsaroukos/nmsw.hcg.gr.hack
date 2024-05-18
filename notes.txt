@@ -1,0 +1,1 @@
+Given name in row 58 contains not accepted character (^[a-zA-Z]+([ a-zA-Z]+)?$)
