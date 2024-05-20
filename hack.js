@@ -231,8 +231,47 @@ document.addEventListener( 'DOMContentLoaded',()=>{
         }
     ];
             
-    addButton("to Kos", ()=>{setTripValues(TRIPS[2])});
-    addButton("to Pserimos", ()=>setTripValues(TRIPS[1]));
-    addButton("to Kalymnos", ()=>setTripValues(TRIPS[0]));
+
+    /**
+     * 
+     * @param {string} siblingId 
+     */
+    function switchOn( siblingId ){
+        let sibling = document.getElementById(siblingId);
+
+        if( sibling ){
+            let switcher = sibling.parentElement.querySelector('.switchery');
+            if( switcher.style.backgroundColor!=="rgb(52, 143, 226)" )
+                $(switcher).trigger('click');
+        }
+    }
+
+
+    (function main(){
+
+        //step 1: click departures tab
+        const dep_tab = document.querySelector('a[href="#departures"]');
+        dep_tab.click();
+
+        if( dep_tab && document.querySelectorAll('a[href="#VoyageDetails"').length===0 ){
+
+
+            //step 2: switch epivainontvn apoplou
+            switchOn('Forms_PAX_D_');
+
+            //step 3: click view button
+            const view_button = document.getElementById('viewElementsButton');
+            if( view_button )
+                view_button.click();
+            //this triggers page reload
+        }else{
+
+            addButton("to Kos", ()=>{setTripValues(TRIPS[2])});
+            addButton("to Pserimos", ()=>setTripValues(TRIPS[1]));
+            addButton("to Kalymnos", ()=>setTripValues(TRIPS[0]));
+
+        }
+
+    })();
 
  });
