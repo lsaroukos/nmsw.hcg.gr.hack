@@ -1,26 +1,27 @@
 /**
  * hack.js
  * 
- * v.1.1.0
+ * v.1.1.1
  * 
  * author: lsaroukos <info@lsaroukos.gr>
  */
 
 document.addEventListener( 'DOMContentLoaded',()=>{
 
+    const ACTION_DELAY_INTERVAL = 400;
     /**
      * crew details definition
      */
     const CREW = [
-        {   //saroukos lefteris
-            surname: "SAROUKOS",
-            fname:  "LEFTERIS",
+        {   //
+            surname: "TEST",
+            fname:  "TEST_NAME",
             sex:    "Male",
             nationality: "GR",
-            birthdate: "10/12/2000"
+            birthdate: "01/01/1990"
         },
-    ];
 
+    ];
 
 
     /**
@@ -308,7 +309,7 @@ document.addEventListener( 'DOMContentLoaded',()=>{
                         reject(`Element with selector "${selector}" not found after ${count + 1} attempts.`);
                     }
                 }
-            }, 400);
+            }, ACTION_DELAY_INTERVAL);
         });
     }
     
@@ -319,32 +320,38 @@ document.addEventListener( 'DOMContentLoaded',()=>{
      * @param {number} index - The index of the crew member in the CREW array.
      * @returns {Promise} - A promise that resolves when the crew member is added.
      */
-    function addNextCrew(create_btn, index) {
+    function addNextCrew(index=0) {
         return new Promise((resolve, reject) => {
             if (index >= CREW.length) {
                 resolve('All crew members have been added.');
                 return;
             }
 
-            create_btn.click();
+            //click create btn
+            loadElement("#Crew_DepDataTable_wrapper .buttons-create").then( create_btn=>{
 
-            let crew_member = CREW[index];
+                //after clicking the create_btn
+                create_btn.click();
 
-            document.getElementById("DTE_Field_Crew_Dep_Family_name").value = crew_member.surname;
-            document.getElementById("DTE_Field_Crew_Dep_Given_name").value = crew_member.fname;
-            document.getElementById("Crew_Dep_Gender").value = sexMapping[crew_member.sex];
-            document.getElementById("Crew_Dep_Nationality").value = countryMapping[crew_member.nationality];
-            document.getElementById("DTE_Field_Crew_Dep_Date_of_birth").value = crew_member.birthdate;
+                let crew_member = CREW[index];
+    
+                document.getElementById("DTE_Field_Crew_Dep_Family_name").value = crew_member.surname;
+                document.getElementById("DTE_Field_Crew_Dep_Given_name").value = crew_member.fname;
+                document.getElementById("Crew_Dep_Gender").value = sexMapping[crew_member.sex];
+                document.getElementById("Crew_Dep_Nationality").value = countryMapping[crew_member.nationality];
+                document.getElementById("DTE_Field_Crew_Dep_Date_of_birth").value = crew_member.birthdate;
+    
+                // Click submit button
+                loadElement('.DTE_Footer .btn-primary').then(submit_btn => {
+                    setTimeout(() => {
+                        submit_btn.click();
+                        setTimeout(()=>{resolve(addNextCrew( index + 1))},ACTION_DELAY_INTERVAL);
+                    }, ACTION_DELAY_INTERVAL);
+                }).catch(error => {
+                    reject(`Failed to load submit button: ${error}`);
+                });
+            }).catch( error=>console.log(error));
 
-            // Click submit button
-            loadElement('.DTE_Footer .btn-primary').then(submit_btn => {
-                setTimeout(() => {
-                    submit_btn.click();
-                    resolve(addNextCrew(create_btn, index + 1));
-                }, 200);
-            }).catch(error => {
-                reject(`Failed to load submit button: ${error}`);
-            });
         });
     }
 
@@ -357,7 +364,7 @@ document.addEventListener( 'DOMContentLoaded',()=>{
         if (!crew_tab) return;
 
         loadElement("#Crew_DepDataTable_wrapper .buttons-create").then(create_btn => {
-            return addNextCrew(create_btn, 0);
+            return addNextCrew();
         }).then(() => {
             // Click passengers tab
             clickTab("Passengers");
