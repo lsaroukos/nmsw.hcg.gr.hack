@@ -12,13 +12,28 @@ document.addEventListener( 'DOMContentLoaded',()=>{
      * crew details definition
      */
     const CREW = [
-        {   //saroukos lefteris
-            surname: "SAROUKOS",
-            fname:  "LEFTERIS",
+        {   //
+            surname: "ANTHOULIS",
+            fname:  "DIMITRIOS",
             sex:    "Male",
             nationality: "GR",
-            birthdate: "10/12/2000"
+            birthdate: "20/01/1963"
         },
+        {   //
+            surname: "ANTHOPOULOU",
+            fname:  "KIDONIA",
+            sex:    "Female",
+            nationality: "GR",
+            birthdate: "03/08/1986"
+        },
+        {   //
+            surname: "NTRITSOS",
+            fname:  "ILIAS",
+            sex:    "Male",
+            nationality: "GR",
+            birthdate: "04/02/1985"
+        },
+
     ];
 
 
@@ -27,31 +42,31 @@ document.addEventListener( 'DOMContentLoaded',()=>{
      * boat trips definition
      */
     const TRIPS = [
-        {   //to kalymnos
+        {   //to pserimos
             from: 'kos',
-            to: 'kalymnos',
-            arrived_time : getDateTime('17:15', true),
+            to: 'pserimos',
+            arrived_time : getDateTime('17:00', true),
             estimated_departure_time : getDateTime('10:15'),
             departure_time : getDateTime('10:15'),
-            estimated_arrival_time : getDateTime('13:15'),
+            estimated_arrival_time : getDateTime('11:15'),
             total_people : 0
         },
-        {   //to pserimos
-            from: 'kalymnos',
-            to: 'pserimos',
-            arrived_time : getDateTime('13:15', true),
-            estimated_departure_time : getDateTime('14:15'),
-            departure_time : getDateTime('14:10'),
-            estimated_arrival_time : getDateTime('15:15'),
+        {   //to kalymnos
+            from: 'pserimos',
+            to: 'kalymnos',
+            arrived_time : getDateTime('11:00', true),
+            estimated_departure_time : getDateTime('12:15'),
+            departure_time : getDateTime('12:15'),
+            estimated_arrival_time : getDateTime('13:00'),
             total_people : 0
         },
         {   //to kos
-            from: 'pserimos',
+            from: 'kalymnos',
             to: 'kos',
-            arrived_time : getDateTime('15:05', true),
-            estimated_departure_time : getDateTime('16:10'),
-            departure_time : getDateTime('16:05'),
-            estimated_arrival_time : getDateTime('17:15'),
+            arrived_time : getDateTime('13:00', true),
+            estimated_departure_time : getDateTime('14:45'),
+            departure_time : getDateTime('14:45'),
+            estimated_arrival_time : getDateTime('17:00'),
             total_people : 0
         }
     ];
@@ -146,7 +161,7 @@ document.addEventListener( 'DOMContentLoaded',()=>{
         };
         
         return Object.values(entries).reduce(( sum, info_string )=>{
-            const pattern = /(\d+)\s*εγγραφές$/;
+            const pattern = /(\d+)\s*Ξ΅Ξ³Ξ³ΟΞ±ΟΞ­Ο$/;
             const match = info_string.match(pattern);
             return sum += match ? parseInt( match[1] ) : 0;
         },0);
@@ -302,7 +317,7 @@ document.addEventListener( 'DOMContentLoaded',()=>{
                 if (element) {
                     resolve(element);
                 } else {
-                    if (count < 10) {
+                    if (count < 20) {
                         resolve(loadElement(selector, count + 1));
                     } else {
                         reject(`Element with selector "${selector}" not found after ${count + 1} attempts.`);
@@ -384,7 +399,7 @@ document.addEventListener( 'DOMContentLoaded',()=>{
             //this triggers page reload
         }else{
 
-            addCrewMembers();
+           // addCrewMembers();
             addButton("to Kos", ()=>{setTripValues(TRIPS[2])});
             addButton("to Pserimos", ()=>setTripValues(TRIPS[1]));
             addButton("to Kalymnos", ()=>setTripValues(TRIPS[0]));
