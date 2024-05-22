@@ -10,3 +10,4 @@
 
 ### v2.0.1 
     added obscursion support
+    reverse port buttons order

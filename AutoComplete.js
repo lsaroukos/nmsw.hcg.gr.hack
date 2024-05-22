@@ -105,15 +105,15 @@ class AutoComplete{
     
         PORTS = {
             kos : {
-                option : '<option value="6824" data-select2-id="19">Kos (GRKGS)</option>',
+                option : '<option value="6824">Kos (GRKGS)</option>',
                 id : '6824' 
             },
             kalymnos : {
-                option : '<option value="6789" data-select2-id="58">Kalymnos (GRKMI)</option>',
+                option : '<option value="6789">Kalymnos (GRKMI)</option>',
                 id : '6789' 
             },
             pserimos : {
-                option : '<option value="6912" data-select2-id="19">Phserimos Dodekanisou (GRPSE)</option>',
+                option : '<option value="6912">Phserimos Dodekanisou (GRPSE)</option>',
                 id : '6912' 
             },
         };
@@ -241,7 +241,19 @@ class AutoComplete{
          * 
          */
         setSelectField( key, port ){
-            ($(this.FIELDS[key]['id']).append(PORTS[port]['option'])).val(PORTS[port]['id']).trigger('change');
+
+            var selectElement = $(this.FIELDS[key]['id']);
+            var portOption = this.PORTS[port]['option'];
+            var portId = this.PORTS[port]['id'];
+            
+            // Check if an option with the same value already exists
+            if (selectElement.find('option[value="' + portId + '"]').length === 0) {
+                // Append the option if it doesn't exist
+                selectElement.append(portOption).val(portId).trigger('change');
+            } else {
+                selectElement.val(portId).trigger('change');
+            }
+
         }
     
         setSimpleField( key, value ){
@@ -263,9 +275,9 @@ class AutoComplete{
                     
                     //if this is a select2 field
                     if( this.FIELDS[key].hasOwnProperty('type') && this.FIELDS[key]['type']==='select2' ){
-                        setSelectField( key, trip[key] );
+                        this.setSelectField( key, trip[key] );
                     }else{
-                        setSimpleField( key, trip[key] );
+                        this.setSimpleField( key, trip[key] );
                     }
     
                 }
@@ -400,8 +412,8 @@ class AutoComplete{
 
         constructor( CREW, TRIPS ){
 
-            this.CREW = CREW;
-            this.TRIPS = TRIPS;
+            this.CREW = CREW ?? this.CREW;
+            this.TRIPS = TRIPS ?? this.TRIPS;
 
             //add styling
             this.addStyling();
@@ -424,7 +436,7 @@ class AutoComplete{
     
                 this.addCrewMembers();
                 let that = this;
-                this.TRIPS.forEach( trip=>{
+                this.TRIPS.reverse().forEach( trip=>{
                     that.addButton(trip.title, ()=>{that.setTripValues(trip)});
                 });
     
