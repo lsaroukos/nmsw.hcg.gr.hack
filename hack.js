@@ -1,7 +1,7 @@
 /**
  * hack.js
  * 
- * v.1.1.1
+ * v.1.1.2
  * 
  * author: lsaroukos <info@lsaroukos.gr>
  */
@@ -15,10 +15,17 @@ document.addEventListener( 'DOMContentLoaded',()=>{
     const CREW = [
         {   //
             surname: "TEST",
-            fname:  "TEST_NAME",
+            fname:  "TEST NAME",
             sex:    "Male",
             nationality: "GR",
             birthdate: "01/01/1990"
+        },
+        {   //
+            surname: "TESTTWO",
+            fname:  "TESTTWO NAME",
+            sex:    "Female",
+            nationality: "GR",
+            birthdate: "02/02/1992"
         },
 
     ];
@@ -365,11 +372,14 @@ document.addEventListener( 'DOMContentLoaded',()=>{
 
         loadElement("#Crew_DepDataTable_wrapper .buttons-create").then(create_btn => {
             return addNextCrew();
-        }).then(() => {
-            // Click passengers tab
-            clickTab("Passengers");
         }).catch(error => {
             console.error(`Error adding crew members: ${error}`);
+        }).finally( ()=>{
+            //handle failure
+            crew_tab.classList.remove('active','show');
+            document.getElementById('Crew').classList.remove('active','show');
+            // Click passengers tab
+            clickTab("Crew");
         });
     }
 
