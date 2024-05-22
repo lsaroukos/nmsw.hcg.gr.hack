@@ -1,8 +1,6 @@
 /**
  * AutoComplete.js
  * 
- * v.2.0.0.
- * 
  * author: lsaroukos <info@lsaroukos.gr>
  */
 class AutoComplete{
@@ -435,3 +433,5 @@ class AutoComplete{
         };
 
 }
+
+new AutoComplete( LS_AUTOCOMPLETE_CREW, LS_AUTOCOMPLETE_TRIPS );

@@ -7,3 +7,6 @@
 
 ### v2.0.0 
     load from external class
+
+### v2.0.1 
+    added obscursion support
