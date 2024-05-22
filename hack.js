@@ -1,13 +1,14 @@
 /**
  * hack.js
  * 
- * v.1.1.0
+ * v.1.1.1
  * 
  * author: lsaroukos <info@lsaroukos.gr>
  */
 
 document.addEventListener( 'DOMContentLoaded',()=>{
 
+    const ACTION_DELAY_INTERVAL = 400;
     /**
      * crew details definition
      */
@@ -37,36 +38,35 @@ document.addEventListener( 'DOMContentLoaded',()=>{
     ];
 
 
-
     /**
      * boat trips definition
      */
     const TRIPS = [
-        {   //to pserimos
+        {   //to kalymnos
             from: 'kos',
-            to: 'pserimos',
-            arrived_time : getDateTime('17:00', true),
+            to: 'kalymnos',
+            arrived_time : getDateTime('17:15', true),
             estimated_departure_time : getDateTime('10:15'),
             departure_time : getDateTime('10:15'),
-            estimated_arrival_time : getDateTime('11:15'),
+            estimated_arrival_time : getDateTime('13:15'),
             total_people : 0
         },
-        {   //to kalymnos
-            from: 'pserimos',
-            to: 'kalymnos',
-            arrived_time : getDateTime('11:00', true),
-            estimated_departure_time : getDateTime('12:15'),
-            departure_time : getDateTime('12:15'),
-            estimated_arrival_time : getDateTime('13:00'),
+        {   //to pserimos
+            from: 'kalymnos',
+            to: 'pserimos',
+            arrived_time : getDateTime('13:15', true),
+            estimated_departure_time : getDateTime('14:15'),
+            departure_time : getDateTime('14:10'),
+            estimated_arrival_time : getDateTime('15:15'),
             total_people : 0
         },
         {   //to kos
-            from: 'kalymnos',
+            from: 'pserimos',
             to: 'kos',
-            arrived_time : getDateTime('13:00', true),
-            estimated_departure_time : getDateTime('14:45'),
-            departure_time : getDateTime('14:45'),
-            estimated_arrival_time : getDateTime('17:00'),
+            arrived_time : getDateTime('15:05', true),
+            estimated_departure_time : getDateTime('16:10'),
+            departure_time : getDateTime('16:05'),
+            estimated_arrival_time : getDateTime('17:15'),
             total_people : 0
         }
     ];
@@ -161,7 +161,7 @@ document.addEventListener( 'DOMContentLoaded',()=>{
         };
         
         return Object.values(entries).reduce(( sum, info_string )=>{
-            const pattern = /(\d+)\s*Ξ΅Ξ³Ξ³ΟΞ±ΟΞ­Ο$/;
+            const pattern = /(\d+)\s*εγγραφές$/;
             const match = info_string.match(pattern);
             return sum += match ? parseInt( match[1] ) : 0;
         },0);
@@ -317,13 +317,13 @@ document.addEventListener( 'DOMContentLoaded',()=>{
                 if (element) {
                     resolve(element);
                 } else {
-                    if (count < 20) {
+                    if (count < 10) {
                         resolve(loadElement(selector, count + 1));
                     } else {
                         reject(`Element with selector "${selector}" not found after ${count + 1} attempts.`);
                     }
                 }
-            }, 400);
+            }, ACTION_DELAY_INTERVAL);
         });
     }
     
@@ -334,32 +334,38 @@ document.addEventListener( 'DOMContentLoaded',()=>{
      * @param {number} index - The index of the crew member in the CREW array.
      * @returns {Promise} - A promise that resolves when the crew member is added.
      */
-    function addNextCrew(create_btn, index) {
+    function addNextCrew(index=0) {
         return new Promise((resolve, reject) => {
             if (index >= CREW.length) {
                 resolve('All crew members have been added.');
                 return;
             }
 
-            create_btn.click();
+            //click create btn
+            loadElement("#Crew_DepDataTable_wrapper .buttons-create").then( create_btn=>{
 
-            let crew_member = CREW[index];
+                //after clicking the create_btn
+                create_btn.click();
 
-            document.getElementById("DTE_Field_Crew_Dep_Family_name").value = crew_member.surname;
-            document.getElementById("DTE_Field_Crew_Dep_Given_name").value = crew_member.fname;
-            document.getElementById("Crew_Dep_Gender").value = sexMapping[crew_member.sex];
-            document.getElementById("Crew_Dep_Nationality").value = countryMapping[crew_member.nationality];
-            document.getElementById("DTE_Field_Crew_Dep_Date_of_birth").value = crew_member.birthdate;
+                let crew_member = CREW[index];
+    
+                document.getElementById("DTE_Field_Crew_Dep_Family_name").value = crew_member.surname;
+                document.getElementById("DTE_Field_Crew_Dep_Given_name").value = crew_member.fname;
+                document.getElementById("Crew_Dep_Gender").value = sexMapping[crew_member.sex];
+                document.getElementById("Crew_Dep_Nationality").value = countryMapping[crew_member.nationality];
+                document.getElementById("DTE_Field_Crew_Dep_Date_of_birth").value = crew_member.birthdate;
+    
+                // Click submit button
+                loadElement('.DTE_Footer .btn-primary').then(submit_btn => {
+                    setTimeout(() => {
+                        submit_btn.click();
+                        setTimeout(()=>{resolve(addNextCrew( index + 1))},ACTION_DELAY_INTERVAL);
+                    }, ACTION_DELAY_INTERVAL);
+                }).catch(error => {
+                    reject(`Failed to load submit button: ${error}`);
+                });
+            }).catch( error=>console.log(error));
 
-            // Click submit button
-            loadElement('.DTE_Footer .btn-primary').then(submit_btn => {
-                setTimeout(() => {
-                    submit_btn.click();
-                    resolve(addNextCrew(create_btn, index + 1));
-                }, 200);
-            }).catch(error => {
-                reject(`Failed to load submit button: ${error}`);
-            });
         });
     }
 
@@ -372,7 +378,7 @@ document.addEventListener( 'DOMContentLoaded',()=>{
         if (!crew_tab) return;
 
         loadElement("#Crew_DepDataTable_wrapper .buttons-create").then(create_btn => {
-            return addNextCrew(create_btn, 0);
+            return addNextCrew();
         }).then(() => {
             // Click passengers tab
             clickTab("Passengers");
@@ -399,7 +405,7 @@ document.addEventListener( 'DOMContentLoaded',()=>{
             //this triggers page reload
         }else{
 
-           // addCrewMembers();
+            addCrewMembers();
             addButton("to Kos", ()=>{setTripValues(TRIPS[2])});
             addButton("to Pserimos", ()=>setTripValues(TRIPS[1]));
             addButton("to Kalymnos", ()=>setTripValues(TRIPS[0]));
