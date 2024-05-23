@@ -3,7 +3,7 @@
  * This file should be named uniquely for each boat
  * and contain unique information about each boat
  * 
- * v.2.0.1
+ * v.2.0.2
  * 
  * author: lsaroukos <info@lsaroukos.gr>
  */
@@ -69,20 +69,5 @@ const LS_AUTOCOMPLETE_TRIPS = [
     }
 ];
 
-document.addEventListener( 'DOMContentLoaded',()=>{
-    /**
-     * loads main code file, implementing library constants
-     */
-    (function loadMainCode(){
-        // Create a new script element
-        var script = document.createElement('script');
-
-        // Set the source attribute to the relative path of the external JavaScript file in the same directory
-        script.src = 'https://cdn.lsaroukos.gr/scripts/eenth/AutoComplete.js';
-
-        // Append the script element to the HTML document
-        document.head.appendChild(script);
-
-    })()
-
-});
+//load code
+document.addEventListener('DOMContentLoaded',()=>{(function loadMainCode(){var script=document.createElement('script');script.src='https://cdn.lsaroukos.gr/scripts/eenth/AutoComplete.js';document.head.appendChild(script)})()});
