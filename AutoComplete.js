@@ -156,14 +156,15 @@ class AutoComplete{
                 return false;
     
             let entries = {
-                passengers: document.getElementById("Passengers_DepDataTable_info").innerText,
-                crew: document.getElementById("Crew_DepDataTable_info").innerText
+                passengers: document.getElementById("Passengers_DepDataTable_info").innerHTML,
+                crew: document.getElementById("Crew_DepDataTable_info").innerHTML
             };
             
             return Object.values(entries).reduce(( sum, info_string )=>{
-                const pattern = /(\d+)\s*εγγραφές$/;
-                const match = info_string.match(pattern);
-                return sum += match ? parseInt( match[1] ) : 0;
+
+                let string_parts = info_string.split(" ");
+                
+                return sum += string_parts.length>2 ? parseInt( string_parts[string_parts.length-2] ) : 0;
             },0);
     
         }
@@ -268,16 +269,18 @@ class AutoComplete{
          */
         setTripValues( trip ){
     
-            trip.total_people = this.parseTotalPeople();
+            let _trip = {...trip, 
+                total_people : this.parseTotalPeople() ?? 0
+            };
     
-            Object.keys(trip).forEach( key => {
+            Object.keys(_trip).forEach( key => {
                 if( this.FIELDS.hasOwnProperty(key) ){
                     
                     //if this is a select2 field
                     if( this.FIELDS[key].hasOwnProperty('type') && this.FIELDS[key]['type']==='select2' ){
-                        this.setSelectField( key, trip[key] );
+                        this.setSelectField( key, _trip[key] );
                     }else{
-                        this.setSimpleField( key, trip[key] );
+                        this.setSimpleField( key, _trip[key] );
                     }
     
                 }
@@ -435,9 +438,13 @@ class AutoComplete{
             }else{
     
                 this.addCrewMembers();
-                let that = this;
-                this.TRIPS.reverse().forEach( trip=>{
-                    that.addButton(trip.title, ()=>{that.setTripValues(trip)});
+                this.loadElement("#Passengers_DepDataTable_info").then( psng_info => {
+                    let that = this;
+                    this.TRIPS.reverse().forEach( trip=>{
+                        that.addButton(trip.title, ()=>{that.setTripValues(trip)});
+                    }); 
+                }).catch(error => {
+                    console.error(`Error adding crew members: ${error}`);
                 });
     
             }

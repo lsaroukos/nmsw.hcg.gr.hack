@@ -11,3 +11,7 @@
 ### v2.0.1 
     added obscursion support
     reverse port buttons order
+
+### v2.0.3
+    load text input before parsing
+    parse text info differently

@@ -3,7 +3,7 @@
  * This file should be named uniquely for each boat
  * and contain unique information about each boat
  * 
- * v.2.0.2
+ * v.2.0.3
  * 
  * author: lsaroukos <info@lsaroukos.gr>
  */
