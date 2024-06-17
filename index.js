@@ -3,7 +3,7 @@
  * This file should be named uniquely for each boat
  * and contain unique information about each boat
  * 
- * v.2.0.3
+ * v.2.1.0
  * 
  * author: lsaroukos <info@lsaroukos.gr>
  */
@@ -11,7 +11,7 @@
 /**
  * crew details definition
  */
-const LS_AUTOCOMPLETE_CREW = [
+let LS_AUTOCOMPLETE_CREW = [
     {   //
         surname: "TEST",
         fname:  "TEST NAME",
@@ -33,7 +33,7 @@ const LS_AUTOCOMPLETE_CREW = [
 /**
  * boat trips definition
  */
-const LS_AUTOCOMPLETE_TRIPS = [
+let LS_AUTOCOMPLETE_TRIPS = [
     {   //to kalymnos
         title: 'to kalymnos',
         from: 'kos',
@@ -65,7 +65,8 @@ const LS_AUTOCOMPLETE_TRIPS = [
         estimated_departure_time : { time: '16:10'},
         departure_time : { time: '16:05'},
         estimated_arrival_time : { time: '17:15'},
-        total_people : 0
+        total_people : 0,
+        color: "red"
     }
 ];
 

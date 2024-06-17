@@ -116,6 +116,18 @@ class AutoComplete{
                 option : '<option value="6912">Phserimos Dodekanisou (GRPSE)</option>',
                 id : '6912' 
             },
+            kardamaina : {
+                option: '<option value="6793">Kardamaina Kos (GRKRM)</option>',
+                id: '6793'
+            },
+            kefalos: {
+                option : '<option value="6809">Kefalos Ko (GRKEF)</option>',
+                id : '6809'
+            },
+            nisuros: {
+                option : '<option value="17708">Nisiros (GRNIS)</option>',
+                id : '17708'
+            },
         };
     
     
@@ -192,7 +204,10 @@ class AutoComplete{
                     font-size: medium;
                     box-shadow: 0 0 5px rgba(0,0,0,0.4);
                     cursor: pointer;
+                    z-index:2;
                 }
+                    .hack-button.btn-red{ background-color:maroon;}
+                    .hack-button.btn-khaki{ background-color:khaki;color:black;}
                     .hack-button:active {
                         box-shadow: 0 0 2px rgba(0,0,0,0.4);                
                     }
@@ -214,7 +229,7 @@ class AutoComplete{
         };
     
     
-        addButton(text="", cb_function=null){
+        addButton(text="", cb_function=null, extra_class=""){
             
             let button = document.createElement("BUTTON");
             button.setAttribute('type','button');
@@ -223,6 +238,9 @@ class AutoComplete{
             
             //add styling
             button.classList.add('hack-button');
+            if( extra_class!=="" )
+                button.classList.add(extra_class);
+
             
             //add listener
             if( cb_function!==null ){
@@ -441,7 +459,8 @@ class AutoComplete{
                 this.loadElement("#Passengers_DepDataTable_info").then( psng_info => {
                     let that = this;
                     this.TRIPS.reverse().forEach( trip=>{
-                        that.addButton(trip.title, ()=>{that.setTripValues(trip)});
+                        let extra_class = trip.hasOwnProperty('color') ? `btn-${trip.color}` : '';
+                        that.addButton(trip.title, ()=>{that.setTripValues(trip)}, extra_class);
                     }); 
                 }).catch(error => {
                     console.error(`Error adding crew members: ${error}`);
