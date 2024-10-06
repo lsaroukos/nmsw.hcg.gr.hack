@@ -15,3 +15,6 @@
 ### v2.0.3
     load text input before parsing
     parse text info differently
+
+### v2.0.4
+    fixed not functional changes after eenth code update

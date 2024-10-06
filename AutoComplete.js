@@ -268,9 +268,9 @@ class AutoComplete{
             // Check if an option with the same value already exists
             if (selectElement.find('option[value="' + portId + '"]').length === 0) {
                 // Append the option if it doesn't exist
-                selectElement.append(portOption).val(portId).trigger('change');
+                selectElement.append(portOption).val(portId); //.trigger('change');
             } else {
-                selectElement.val(portId).trigger('change');
+                selectElement.val(portId);  //.trigger('change');
             }
 
         }
@@ -283,7 +283,7 @@ class AutoComplete{
         }
     
         /**
-         * 
+         * Fills stoixeia taksidiou tab
          */
         setTripValues( trip ){
     
